@@ -48,16 +48,17 @@ int main(int argc, char* argv[]) {
     bool quit = false;
     while (!quit) {
 
-	usleep(100000);
-
-	print_grid(grid, renderer);
-    	SDL_RenderPresent(renderer);
-	update_grid(grid);
-
-
    	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     	SDL_RenderClear(renderer);
     	SDL_RenderPresent(renderer);
+
+	print_grid(grid, renderer);
+    	SDL_RenderPresent(renderer);
+
+	usleep(90000);
+
+	
+	update_grid(grid);
 
 	SDL_Event event;
         while (SDL_PollEvent(&event)) {

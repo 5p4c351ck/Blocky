@@ -9,8 +9,8 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#define width  80	
-#define height 30
+#define width  100	
+#define height 180
 			  
 extern char grid[height][width];
 
