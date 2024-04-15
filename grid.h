@@ -13,15 +13,15 @@
 #define width  80	
 #define height 45
 
-#define screen_width  1920	
-#define screen_height 1080	
-			  
+#define square_width 10
+#define square_height 10
+
 extern char grid[width][height];
 
 /* API */
 void init_grid(char array[width][height]);
 void populate_grid(char array[width][height]);
-void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface);
+void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int windowWidth, int windowHeight);
 void check_neighbours(char *cell, char *newcell, int i, int j);
 void update_grid(char array[width][height]);
 

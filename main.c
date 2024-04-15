@@ -7,12 +7,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Create a window
-    SDL_Window* window = SDL_CreateWindow("Cellular automata", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, 0);
+    SDL_Window* window = SDL_CreateWindow("Fullscreen Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_BORDERLESS);
     if (!window) {
         SDL_Log("Failed to create window: %s", SDL_GetError());
         return 1;
     }
+    
+    int windowWidth;
+    int windowHeight;
+
+    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
@@ -22,7 +27,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    SDL_Surface* surface = SDL_CreateRGBSurface(0, screen_width, screen_height, 32, 0, 0, 0, 0);
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, windowWidth, windowHeight, 32, 0, 0, 0, 0);
     if (!surface) {
         SDL_Log("Failed to create surface: %s", SDL_GetError());
         SDL_DestroyWindow(window);
@@ -41,9 +46,7 @@ int main(int argc, char* argv[]) {
 	return 1;
     }
 
-
-    SDL_Rect rect = {0, 0, 10, 10};
-
+    SDL_Rect rect = {0, 0, square_width, square_height};
 
     srand(clock());
     init_grid(grid);
@@ -62,7 +65,7 @@ int main(int argc, char* argv[]) {
 	
 	usleep(100000);
 
-	print_grid(grid, renderer, &rect, surface);
+	print_grid(grid, renderer, &rect, surface, windowWidth, windowHeight);
     	
 	SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
