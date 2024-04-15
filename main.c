@@ -14,7 +14,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Create a renderer
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
         SDL_Log("Failed to create renderer: %s", SDL_GetError());
@@ -23,14 +22,27 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // Set the drawing color to black
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, 1920, 1080, 32, 0, 0, 0, 0);
+    if (!surface) {
+        SDL_Log("Failed to create surface: %s", SDL_GetError());
+        SDL_DestroyWindow(window);
+    	SDL_DestroyRenderer(renderer);
+        SDL_Quit();
+	return 1;
+    }
 
-    // Clear the window with black color
-    SDL_RenderClear(renderer);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!texture) {
+        SDL_Log("Failed to create texture: %s", SDL_GetError());
+        SDL_DestroyWindow(window);
+    	SDL_DestroyRenderer(renderer);
+    	SDL_FreeSurface(surface);
+        SDL_Quit();
+	return 1;
+    }
 
-    // Update the window
-    SDL_RenderPresent(renderer);
+
+    SDL_Rect rect = {0, 0, 10, 10};
 
 
     srand(clock());
@@ -43,21 +55,19 @@ int main(int argc, char* argv[]) {
     grid[10][11] = 1;
     grid[10][12] = 1;
 
-
-    // Wait for a key press
     bool quit = false;
     while (!quit) {
 
-   	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-    	SDL_RenderClear(renderer);
-    	SDL_RenderPresent(renderer);
-
-	print_grid(grid, renderer);
-    	SDL_RenderPresent(renderer);
-
-	usleep(90000);
-
+    	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 255, 255, 255)); // Fill with black color
 	
+	usleep(1000);
+
+	print_grid(grid, renderer, &rect, surface);
+    	
+	SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_RenderPresent(renderer);
+		
 	update_grid(grid);
 
 	SDL_Event event;
@@ -69,8 +79,10 @@ int main(int argc, char* argv[]) {
     }
 
     // Cleanup
-    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture); 
     SDL_Quit();
     return 0;
 }
