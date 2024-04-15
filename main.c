@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Create a window
-    SDL_Window* window = SDL_CreateWindow("Cellular automata", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1080, 0);
+    SDL_Window* window = SDL_CreateWindow("Cellular automata", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screen_width, screen_height, 0);
     if (!window) {
         SDL_Log("Failed to create window: %s", SDL_GetError());
         return 1;
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    SDL_Surface* surface = SDL_CreateRGBSurface(0, 1920, 1080, 32, 0, 0, 0, 0);
+    SDL_Surface* surface = SDL_CreateRGBSurface(0, screen_width, screen_height, 32, 0, 0, 0, 0);
     if (!surface) {
         SDL_Log("Failed to create surface: %s", SDL_GetError());
         SDL_DestroyWindow(window);
@@ -58,9 +58,9 @@ int main(int argc, char* argv[]) {
     bool quit = false;
     while (!quit) {
 
-    	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 255, 255, 255)); // Fill with black color
+    	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
 	
-	usleep(1000);
+	usleep(100000);
 
 	print_grid(grid, renderer, &rect, surface);
     	

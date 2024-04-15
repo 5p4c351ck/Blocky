@@ -9,16 +9,20 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#define width  50	
-#define height 50
+/* Maintain the 16:9 aspect ratio */
+#define width  80	
+#define height 45
+
+#define screen_width  1920	
+#define screen_height 1080	
 			  
-extern char grid[height][width];
+extern char grid[width][height];
 
 /* API */
-void init_grid(char array[height][width]);
-void populate_grid(char array[height][width]);
-void print_grid(char array[height][width], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface);
+void init_grid(char array[width][height]);
+void populate_grid(char array[width][height]);
+void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface);
 void check_neighbours(char *cell, char *newcell, int i, int j);
-void update_grid(char array[height][width]);
+void update_grid(char array[width][height]);
 
 #endif

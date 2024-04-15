@@ -1,9 +1,6 @@
 #include "grid.h"
 
-char grid[height][width];
-
-char dead[] = "\033[30m\xE2\x96\x88\033[0m";
-char alive[] = "\xE2\x96\x88";
+char grid[width][height];
 
 static char under;		
 static char above; 
@@ -14,17 +11,17 @@ static char bottom_right;
 static char upper_right;	
 static char upper_left;	 
 
-void init_grid(char array[height][width]){
-	for(unsigned int i = 0; i < height; i++){
-		for(unsigned int j = 0; j < width; j++){
+void init_grid(char array[width][height]){
+	for(unsigned int i = 0; i < width; i++){
+		for(unsigned int j = 0; j < height; j++){
 			array[i][j] = 0;
 		}
 	}	
 }
 
-void populate_grid(char array[height][width]){
-	for(unsigned int i = 0; i < height; i++){
-		for(unsigned int j = 0; j < width; j++){
+void populate_grid(char array[width][height]){
+	for(unsigned int i = 0; i < width; i++){
+		for(unsigned int j = 0; j < height; j++){
 			usleep(10);	
 		int random_number = rand() % 2;
 			array[i][j] = random_number;
@@ -33,14 +30,14 @@ void populate_grid(char array[height][width]){
 	return;
 }
 
-void print_grid(char array[height][width], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface){
+void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface){
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-	for(unsigned int i = 0; i < height; i++){
-		for(unsigned int j = 0; j < width; j++){
+	for(unsigned int i = 0; i < width; i++){
+		for(unsigned int j = 0; j < height; j++){
 			if(array[i][j]){
-				rect->x = i * 10;
-				rect->y = j * 10;
-    				SDL_FillRect(surface, rect, SDL_MapRGB(surface->format, 0, 0, 0));
+				rect->x = (i * 10) + 560;
+				rect->y = (j * 10) + 290;
+    				SDL_FillRect(surface, rect, SDL_MapRGB(surface->format, 255, 255, 255));
 			}
 		}
 	}
@@ -51,15 +48,15 @@ void check_neighbours(char *cell, char *newcell, int i, int j){
 	
 	unsigned int neighbours = 0;
 
-	if(i < height){
-		under = *(cell + width);
+	if(i < width){
+		under = *(cell + height);
 		if(under){neighbours++;}
 	}
 	if(i > 0){
-		above = *(cell - width);
+		above = *(cell - height);
 		if(above){neighbours++;}
 	}
-	if(j < width){
+	if(j < height){
 		right = *(cell + 1);
 		if(right){neighbours++;}
 	}
@@ -67,20 +64,20 @@ void check_neighbours(char *cell, char *newcell, int i, int j){
 		left = *(cell - 1);
 		if(left){neighbours++;}
 	}
-	if(i < height && j > 0){
-		bottom_left = *(cell + (width  - 1));
+	if(i < width && j > 0){
+		bottom_left = *(cell + (height  - 1));
 		if(bottom_left){neighbours++;}
 	}
-	if( i < height && j < width){
-		bottom_right = *(cell + (width + 1));
+	if( i < width && j < height){
+		bottom_right = *(cell + (height + 1));
 		if(bottom_right){neighbours++;}
 	}
-	if(i > 0 && j < width){
-		upper_right = *(cell - (width - 1));
+	if(i > 0 && j < height){
+		upper_right = *(cell - (height - 1));
 		if(upper_right){neighbours++;}	
 	}
 	if(i > 0 && j > 0){
-		upper_left = *(cell - (width + 1));
+		upper_left = *(cell - (height + 1));
 		if(upper_left){neighbours++;}
 	}
 	if(*cell){ 
@@ -98,16 +95,16 @@ void check_neighbours(char *cell, char *newcell, int i, int j){
 	}
 }
 
-void update_grid(char array[height][width]){
-	char new_array[height][width];
+void update_grid(char array[width][height]){
+	char new_array[width][height];
 	init_grid(new_array);
-	for(unsigned int i = 0; i < height; i++){
-		for(unsigned int j = 0; j < width; j++){
+	for(unsigned int i = 0; i < width; i++){
+		for(unsigned int j = 0; j < height; j++){
 			check_neighbours(&array[i][j], &new_array[i][j], i, j);
 		}
 	}
-	for(unsigned int i = 0; i < height; i++){
-		for(unsigned int j = 0; j < width; j++){
+	for(unsigned int i = 0; i < width; i++){
+		for(unsigned int j = 0; j < height; j++){
 			array[i][j] = new_array[i][j];
 		}
 	}
