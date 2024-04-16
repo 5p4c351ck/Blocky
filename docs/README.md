@@ -12,7 +12,7 @@ example on Debian:
 
 ```
 
-$ apt update && apt install libsdl2-dev
+$ apt update && apt install libsdl2-dev libsdl2-ttf-dev
 ```
 
 
