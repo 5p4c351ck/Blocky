@@ -1,10 +1,12 @@
 #include "grid.h"
 
+static long long iterations = 0;
+
 static int current = 0;
 static int next = 1;
 
 int main(int argc, char* argv[]) {
-    // Initialize SDL
+    /* Initialize SDL */ 
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
         return 1;
@@ -21,8 +23,8 @@ int main(int argc, char* argv[]) {
 
     SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 
-    int xOffset = ((windowWidth - (width * square_width)) / 2);
-    int yOffset = ((windowHeight - (height * square_height)) / 2);
+    int xOffset = ((windowWidth - (WIDTH * SQUARE_WIDTH)) / 2);
+    int yOffset = ((windowHeight - (HEIGHT * SQUARE_HEIGHT)) / 2);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
@@ -51,10 +53,11 @@ int main(int argc, char* argv[]) {
 	return 1;
     }
 
-    SDL_Rect rect = {0, 0, square_width, square_height};
+    SDL_Rect rect = {0, 0, SQUARE_WIDTH, SQUARE_HEIGHT};
 
     srand(clock());
-    init_grid(grid, current);
+
+    clear_grid(grid);
     populate_grid(grid, current);	
     
     grid[0][8][11] = 1;
@@ -68,7 +71,7 @@ int main(int argc, char* argv[]) {
 
     	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
 	
-        usleep(100000);
+        usleep(SPEED);
 
         print_grid(grid, renderer, &rect, surface, xOffset, yOffset, current);
             
@@ -77,6 +80,7 @@ int main(int argc, char* argv[]) {
         SDL_RenderPresent(renderer);
             
         update_grid(grid, &current, &next);
+        iterations++;
 
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -86,7 +90,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // Cleanup
+    /* Cleanup */
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_FreeSurface(surface);

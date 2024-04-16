@@ -9,21 +9,25 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-/* Maintain the 16:9 aspect ratio */
-#define grid_num 2
-#define width  80	
-#define height 45
+/* 16:9 aspect ratio */
+#define GRID_NUM 2
+#define WIDTH  80	
+#define HEIGHT 45
 
-#define square_width 10
-#define square_height 10
+#define SQUARE_WIDTH 10
+#define SQUARE_HEIGHT 10
 
-extern char grid[grid_num][width][height];
+/* microseconds */
+#define SPEED 100000
+
+/* A tensor to double buffer */
+extern char grid[GRID_NUM][WIDTH][HEIGHT];
 
 /* API */
-void init_grid(char array[grid_num][width][height], int current_grid);
-void populate_grid(char array[grid_num][width][height], int current_grid);
-void print_grid(char array[grid_num][width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset, int current_grid);
-int check_neighbours(char array[grid_num][width][height], int x, int y, int current_grid);
-void update_grid(char array[grid_num][width][height], int* current_grid, int* next_grid);
+void clear_grid(char array[GRID_NUM][WIDTH][HEIGHT]);
+void populate_grid(char array[GRID_NUM][WIDTH][HEIGHT], int current_grid);
+void print_grid(char array[GRID_NUM][WIDTH][HEIGHT], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset, int current_grid);
+int check_neighbours(char array[GRID_NUM][WIDTH][HEIGHT], int x, int y, int current_grid);
+void update_grid(char array[GRID_NUM][WIDTH][HEIGHT], int* current_grid, int* next_grid);
 
 #endif
