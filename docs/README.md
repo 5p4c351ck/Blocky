@@ -7,7 +7,7 @@ Cellular automata research framework written in C
 ## Compile and run the program
 
 
-SDL is a dependency, so you need to install it.
+SDL is a dependency, and it is not included, so you need to install it yourself.
 Example on Debian:
 
 ```
