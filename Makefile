@@ -4,7 +4,7 @@ executable = blocky
 all: $(executable)
 
 $(executable): $(objs) 
-	gcc $(objs) -o $(executable) -lSDL2
+	gcc $(objs) -o $(executable) -lSDL2 -lSDL2_ttf
 
 grid.o: grid.c
 	gcc grid.c -c -o grid.o

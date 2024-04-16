@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 /* 16:9 aspect ratio */
 #define GRID_NUM 2
