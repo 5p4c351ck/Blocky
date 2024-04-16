@@ -1,6 +1,6 @@
 #include "grid.h"
 
-char grid[width][height];
+char grid[grid_num][width][height];
 
 static char under;		
 static char above; 
@@ -11,31 +11,31 @@ static char bottom_right;
 static char upper_right;	
 static char upper_left;
 
-void init_grid(char array[width][height]){
+void init_grid(char array[grid_num][width][height], int current_grid){
 	for(unsigned int i = 0; i < width; i++){
 		for(unsigned int j = 0; j < height; j++){
-			array[i][j] = 0;
+			array[current_grid][i][j] = 0;
 		}
 	}	
 }
 
-void populate_grid(char array[width][height]){
+void populate_grid(char array[grid_num][width][height], int current_grid){
 	for(unsigned int i = 0; i < width; i++){
 		for(unsigned int j = 0; j < height; j++){
 			usleep(10);	
 		int random_number = rand() % 2;
-			array[i][j] = random_number;
+			array[current_grid][i][j] = random_number;
 			}
 		}
 	return;
 }
 
-void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset){
+void print_grid(char array[grid_num][width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset, int current_grid){
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	for(unsigned int i = 0; i < width; i++){
 		for(unsigned int j = 0; j < height; j++){
-			if(array[i][j]){
+			if(array[current_grid][i][j]){
 				rect->x = (i * square_width) + xOffset;
 				rect->y = (j * square_height) + yOffset;
     				SDL_FillRect(surface, rect, SDL_MapRGB(surface->format, 255, 255, 255));
@@ -45,68 +45,42 @@ void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rec
 	return;
 }
 
-void check_neighbours(char *cell, char *newcell, int i, int j){
-	
-	unsigned int neighbours = 0;
+int check_neighbours(char array[grid_num][width][height], int x, int y, int current_grid){
 
-	if(i < width){
-		under = *(cell + height);
-		if(under){neighbours++;}
-	}
-	if(i > 0){
-		above = *(cell - height);
-		if(above){neighbours++;}
-	}
-	if(j < height){
-		right = *(cell + 1);
-		if(right){neighbours++;}
-	}
-	if(j > 0){
-		left = *(cell - 1);
-		if(left){neighbours++;}
-	}
-	if(i < width && j > 0){
-		bottom_left = *(cell + (height  - 1));
-		if(bottom_left){neighbours++;}
-	}
-	if( i < width && j < height){
-		bottom_right = *(cell + (height + 1));
-		if(bottom_right){neighbours++;}
-	}
-	if(i > 0 && j < height){
-		upper_right = *(cell - (height - 1));
-		if(upper_right){neighbours++;}	
-	}
-	if(i > 0 && j > 0){
-		upper_left = *(cell - (height + 1));
-		if(upper_left){neighbours++;}
-	}
-	if(*cell){ 
-		if( neighbours < 2 || neighbours > 3){
-			(*newcell) = 0;
-		}
-		else{
-			(*newcell) = 1;
-		}
-	}
-	else{
-		if(neighbours == 3){
-			(*newcell) = 1;
-		}
-	}
+	int count = 0;
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            if (i == 0 && j == 0) continue;
+            int nx = x + i;
+            int ny = y + j;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                count += grid[current_grid][nx][ny];
+            }
+        }
+    }
+    return count;
 }
 
-void update_grid(char array[width][height]){
-	char new_array[width][height];
-	init_grid(new_array);
-	for(unsigned int i = 0; i < width; i++){
-		for(unsigned int j = 0; j < height; j++){
-			check_neighbours(&array[i][j], &new_array[i][j], i, j);
-		}
-	}
-	for(unsigned int i = 0; i < width; i++){
-		for(unsigned int j = 0; j < height; j++){
-			array[i][j] = new_array[i][j];
-		}
-	}
+void update_grid(char array[grid_num][width][height], int* current_grid, int* next_grid){
+	for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+            int neighbors = check_neighbours(array, i, j, (*current_grid));
+            if (grid[(*current_grid)][i][j] == 1) {
+                if (neighbors < 2 || neighbors > 3) {
+                    grid[(*next_grid)][i][j] = 0; /*Cell dies due to underpopulation or overcrowding*/
+                } else {
+                    grid[(*next_grid)][i][j] = 1; /*Cell survives*/
+                }
+            } else {
+                if (neighbors == 3) {
+                    grid[(*next_grid)][i][j] = 1; /*Cell is born*/
+                } else {
+                    grid[(*next_grid)][i][j] = 0; /*Cell remains dead*/
+                }
+            }
+        }
+    }
+    int temp = (*current_grid);
+    (*current_grid) = (*next_grid);
+    (*next_grid) = temp;
 }

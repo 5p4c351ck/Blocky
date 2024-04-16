@@ -1,5 +1,8 @@
 #include "grid.h"
 
+static int current = 0;
+static int next = 1;
+
 int main(int argc, char* argv[]) {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -51,31 +54,31 @@ int main(int argc, char* argv[]) {
     SDL_Rect rect = {0, 0, square_width, square_height};
 
     srand(clock());
-    init_grid(grid);
-    populate_grid(grid);	
+    init_grid(grid, current);
+    populate_grid(grid, current);	
     
-    grid[8][11] = 1;
-    grid[9][12] = 1;
-    grid[10][10] = 1;
-    grid[10][11] = 1;
-    grid[10][12] = 1;
+    grid[0][8][11] = 1;
+    grid[0][9][12] = 1;
+    grid[0][10][10] = 1;
+    grid[0][10][11] = 1;
+    grid[0][10][12] = 1;
 
     bool quit = false;
     while (!quit) {
 
     	SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
 	
-	usleep(100000);
+        usleep(100000);
 
-	print_grid(grid, renderer, &rect, surface, xOffset, yOffset);
-    	
-	SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	SDL_RenderPresent(renderer);
-		
-	update_grid(grid);
+        print_grid(grid, renderer, &rect, surface, xOffset, yOffset, current);
+            
+        SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
+        SDL_RenderCopy(renderer, texture, NULL, NULL);
+        SDL_RenderPresent(renderer);
+            
+        update_grid(grid, &current, &next);
 
-	SDL_Event event;
+        SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
                 quit = true;

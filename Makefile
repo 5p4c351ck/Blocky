@@ -13,4 +13,4 @@ main.o: main.c
 	gcc main.c -c -o main.o
 
 clean:
-	rm $(objs)
+	rm $(objs) $(executable)
