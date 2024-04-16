@@ -18,6 +18,8 @@ int main(int argc, char* argv[]) {
 
     SDL_GetWindowSize(window, &windowWidth, &windowHeight);
 
+    int xOffset = ((windowWidth - (width * square_width)) / 2);
+    int yOffset = ((windowHeight - (height * square_height)) / 2);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
@@ -65,7 +67,7 @@ int main(int argc, char* argv[]) {
 	
 	usleep(100000);
 
-	print_grid(grid, renderer, &rect, surface, windowWidth, windowHeight);
+	print_grid(grid, renderer, &rect, surface, xOffset, yOffset);
     	
 	SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);

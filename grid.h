@@ -21,7 +21,7 @@ extern char grid[width][height];
 /* API */
 void init_grid(char array[width][height]);
 void populate_grid(char array[width][height]);
-void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int windowWidth, int windowHeight);
+void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset);
 void check_neighbours(char *cell, char *newcell, int i, int j);
 void update_grid(char array[width][height]);
 

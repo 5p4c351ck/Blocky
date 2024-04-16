@@ -30,13 +30,14 @@ void populate_grid(char array[width][height]){
 	return;
 }
 
-void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int windowWidth, int windowHeight){
+void print_grid(char array[width][height], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset){
+
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	for(unsigned int i = 0; i < width; i++){
 		for(unsigned int j = 0; j < height; j++){
 			if(array[i][j]){
-				rect->x = (i * square_width) + ((windowWidth - (width * square_width)) / 2);
-				rect->y = (j * square_height) + ((windowHeight - (height * square_height)) / 2);
+				rect->x = (i * square_width) + xOffset;
+				rect->y = (j * square_height) + yOffset;
     				SDL_FillRect(surface, rect, SDL_MapRGB(surface->format, 255, 255, 255));
 			}
 		}
