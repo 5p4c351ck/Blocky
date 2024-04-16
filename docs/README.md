@@ -6,6 +6,16 @@ Cellular automata research framework written in C
 
 ## Compile and run the program
 
+
+SDL is a dependency, so you need to install it.
+Example on Debian:
+
+```
+
+$ apt update && apt install libsdl2-dev
+```
+
+
 Compile with make
 
 ```
