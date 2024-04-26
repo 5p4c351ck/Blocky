@@ -12,6 +12,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    if (TTF_Init() == -1) {
+        SDL_Log("Unable to initialize SDL_ttf: %s", TTF_GetError());
+        return 1;
+    }
+
+    TTF_Font* font = TTF_OpenFont("./_decterm.ttf", 20);
+    if (!font) {
+    	SDL_Log("Failed to load font: %s", TTF_GetError());
+    	return 1;
+    }
+
     SDL_Window* window = SDL_CreateWindow("Fullscreen Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_BORDERLESS);
     if (!window) {
         SDL_Log("Failed to create window: %s", SDL_GetError());
@@ -53,6 +64,72 @@ int main(int argc, char* argv[]) {
 	return 1;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+SDL_Window* textWindow = SDL_CreateWindow("Stats", 0, 0, 300, 800, 0);
+if (!textWindow) {
+    SDL_Log("Failed to create text window: %s", SDL_GetError());
+    SDL_Quit();
+    return 1;
+}
+
+SDL_Renderer* textRenderer = SDL_CreateRenderer(textWindow, -1, SDL_RENDERER_ACCELERATED);
+if (!textRenderer) {
+    SDL_Log("Failed to create text renderer: %s", SDL_GetError());
+    SDL_DestroyWindow(textWindow);
+    SDL_Quit();
+    return 1;
+}
+
+
+SDL_Color textColor = {255, 255, 255}; // White color
+char text[100];
+sprintf(text, "Iterations: %lld", iterations);
+
+SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, textColor);
+if (!textSurface) {
+    SDL_Log("Failed to render text surface: %s", TTF_GetError());
+    return 1;
+}
+
+SDL_Texture* textTexture = SDL_CreateTextureFromSurface(textRenderer, textSurface);
+if (!textTexture) {
+    SDL_Log("Failed to create text texture: %s", SDL_GetError());
+    return 1;
+}
+
+SDL_Rect textRect = {100, 100, textSurface->w, textSurface->h}; // Adjust position as needed
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     SDL_Rect rect = {0, 0, SQUARE_WIDTH, SQUARE_HEIGHT};
 
     srand(clock());
@@ -75,11 +152,37 @@ int main(int argc, char* argv[]) {
 
         print_grid(grid, renderer, &rect, surface, xOffset, yOffset, current);
             
+        
+        
+        
+        
+        
+sprintf(text, "Iterations: %lld", iterations);//<-
+SDL_RenderClear(textRenderer);
+if (textTexture) {
+    SDL_DestroyTexture(textTexture);
+}
+if (textSurface) {
+    SDL_FreeSurface(textSurface);
+}
+TTF_SizeText(font, text, &textRect.w, &textRect.h);
+textSurface = TTF_RenderText_Solid(font, text, textColor);
+textTexture = SDL_CreateTextureFromSurface(textRenderer, textSurface);
+SDL_RenderCopy(textRenderer, textTexture, NULL, &textRect);//<-
+SDL_RenderPresent(textRenderer);//<-
+
+
+
+
+
+
         SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
         SDL_RenderPresent(renderer);
             
         update_grid(grid, &current, &next);
+
+        
         iterations++;
 
         SDL_Event event;
