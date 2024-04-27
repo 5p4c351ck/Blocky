@@ -20,7 +20,7 @@
 #define SQUARE_HEIGHT 10
 
 /* microseconds */
-#define SPEED 100000
+extern unsigned long delay;
 
 /* A tensor to double buffer */
 extern char grid[GRID_NUM][WIDTH][HEIGHT];
