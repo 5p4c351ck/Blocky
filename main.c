@@ -2,6 +2,8 @@
 #include "rendering.h"
 
 static long long iterations = 0;
+static int living_cells = 0;
+static int dead_cells = 0;
 
 static int current = 0;
 static int next = 1;
@@ -57,7 +59,7 @@ int main(int argc, char* argv[]){
 		return 1;
     	}
 
-    	SDL_Window* textWindow = SDL_CreateWindow("Stats", 0, 0, 300, 800, 0);
+    	SDL_Window* textWindow = SDL_CreateWindow("Stats", 0, 0, 400, 800, 0);
 	if (!textWindow) {
     		SDL_Log("Failed to create text window: %s", SDL_GetError());
     		SDL_Quit();
@@ -75,9 +77,18 @@ int main(int argc, char* argv[]){
    	SDL_Rect rect = {0, 0, SQUARE_WIDTH, SQUARE_HEIGHT};
 
     	char iter_text[100];
+    	char total_text[100];
+    	char alive_text[100];
+    	char dead_text[100];
+    	char pause_text[100];
+    	char save_text[100];
     	char quit_text[100];
-    	sprintf(iter_text, "Iterations: %lld", iterations);
-    	sprintf(quit_text, "Press ESC to quit");
+    	
+   	sprintf(total_text, "Total cells: %d", CELL_NUM);
+   	sprintf(pause_text, "Press SPACE to pause/resume");
+    	sprintf(save_text, "Press ENTER to save a snapshot and quit");
+    	sprintf(quit_text, "Press ESC to quit without saving a snapshot");
+
 
 
     	srand(clock());
@@ -91,19 +102,27 @@ int main(int argc, char* argv[]){
     
 		SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
 		
-		SDL_RenderClear(textRenderer);
-		
-		sprintf(iter_text, "Iterations: %lld", iterations);//<-
-	    	renderText(font, quit_text, 100, 700, textRenderer);
-		renderText(font, iter_text, 100, 200, textRenderer);
-       		SDL_RenderPresent(textRenderer);
+	        living_cells = print_grid(grid, renderer, &rect, surface, xOffset, yOffset, current);
+		dead_cells = (CELL_NUM - living_cells);
 
-        	print_grid(grid, renderer, &rect, surface, xOffset, yOffset, current);
-
-    	    	SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
+		SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
        		SDL_RenderCopy(renderer, texture, NULL, NULL);
        		SDL_RenderPresent(renderer);
-            
+
+		SDL_RenderClear(textRenderer);
+		sprintf(iter_text, "Iterations: %lld", iterations);//<-
+	    	sprintf(alive_text,"Living cells: %d", living_cells);
+    		sprintf(dead_text, "Dead   cells: %d", dead_cells);
+		renderText(font, iter_text, 135, 200, textRenderer);
+		renderText(font, total_text, 135, 270, textRenderer);
+		renderText(font, alive_text,135, 300, textRenderer);
+		renderText(font, dead_text, 135, 330, textRenderer);
+	    	renderText(font, pause_text, 30, 650, textRenderer);
+	    	renderText(font, save_text, 30, 700, textRenderer);
+	    	renderText(font, quit_text, 30, 750, textRenderer);
+		SDL_RenderPresent(textRenderer);
+
+           
      		update_grid(grid, &current, &next);
        		iterations++;
 

@@ -32,8 +32,8 @@ void populate_grid(char array[GRID_NUM][WIDTH][HEIGHT], int current_grid){
 	return;
 }
 
-void print_grid(char array[GRID_NUM][WIDTH][HEIGHT], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset, int current_grid){
-
+int print_grid(char array[GRID_NUM][WIDTH][HEIGHT], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset, int current_grid){
+	int living_cells = 0;
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	for(unsigned int i = 0; i < WIDTH; i++){
 		for(unsigned int j = 0; j < HEIGHT; j++){
@@ -41,10 +41,11 @@ void print_grid(char array[GRID_NUM][WIDTH][HEIGHT], SDL_Renderer* renderer, SDL
 				rect->x = (i * SQUARE_WIDTH) + xOffset;
 				rect->y = (j * SQUARE_HEIGHT) + yOffset;
     				SDL_FillRect(surface, rect, SDL_MapRGB(surface->format, 255, 255, 255));
+				living_cells++;
 			}
 		}
 	}
-	return;
+	return living_cells;
 }
 
 int check_neighbours(char array[GRID_NUM][WIDTH][HEIGHT], int x, int y, int current_grid){
