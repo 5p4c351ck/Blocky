@@ -11,7 +11,6 @@ void renderText(TTF_Font *font, const char* text, int x, int y, SDL_Renderer *re
         SDL_Rect Rect = {x, y, width, height};
         TTF_SizeText(font, text, &Rect.w, &Rect.h);
         SDL_RenderCopy(renderer, texture, NULL, &Rect);
-        SDL_RenderPresent(renderer);
     
         if(surface) SDL_FreeSurface(surface);
         if(texture) SDL_DestroyTexture(texture);
