@@ -97,7 +97,23 @@ int main(int argc, char* argv[]){
     	populate_grid(grid, current);	
 
     	bool quit = false;
-    	while (!quit) {
+    	bool paused = false;
+    	while (!quit) {	
+		SDL_Event event;
+       			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT) {
+                			quit = true;
+            			}
+				else if (event.type == SDL_KEYDOWN) {
+            				if (event.key.keysym.sym == SDLK_ESCAPE) {
+                				quit = true;
+            				} 
+					else if (event.key.keysym.sym == SDLK_SPACE) {
+               					paused = (paused ? false : true);
+            				}			
+        			}
+			}
+		if (!paused){	
 		usleep(SPEED);
     
 		SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0, 0, 0));
@@ -122,16 +138,12 @@ int main(int argc, char* argv[]){
 	    	renderText(font, quit_text, 30, 750, textRenderer);
 		SDL_RenderPresent(textRenderer);
 
-           
      		update_grid(grid, &current, &next);
        		iterations++;
-
-        	SDL_Event event;
-       			while (SDL_PollEvent(&event)) {
-				if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
-                		quit = true;
-            			}
-        		}
+		}
+		else{
+			SDL_Delay(100);
+		}
     	}
 
     /* Cleanup */
