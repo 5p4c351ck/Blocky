@@ -25,6 +25,16 @@ extern unsigned long delay;
 /* A tensor to double buffer */
 extern char grid[GRID_NUM][WIDTH][HEIGHT];
 
+struct snapshot {
+	/* To be added
+	 * Time of snapshot
+	 * Starting pattern
+	 */
+	unsigned long long iterations;
+	unsigned long delay;
+	char grid[GRID_NUM][WIDTH][HEIGHT];
+};
+
 /* API */
 void clear_grid(char array[GRID_NUM][WIDTH][HEIGHT]);
 void populate_grid(char array[GRID_NUM][WIDTH][HEIGHT], int current_grid);
