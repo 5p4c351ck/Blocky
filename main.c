@@ -136,7 +136,7 @@ int main(int argc, char* argv[]){
 
 		SDL_RenderClear(textRenderer);
 		sprintf(iter_text, "Iterations: %lld", iterations);//<-
-		sprintf(delay_text, "Iteration Delay: %lld", delay);//<-
+		sprintf(delay_text, "Iteration Delay: %ld", delay);//<-
 	    	sprintf(alive_text,"Living cells: %d", living_cells);
     		sprintf(dead_text, "Dead   cells: %d", dead_cells);
 		renderText(font, iter_text, 135, 200, textRenderer);
