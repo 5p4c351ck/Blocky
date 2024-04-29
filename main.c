@@ -105,9 +105,15 @@ int main(int argc, char* argv[]){
 			else if (event.type == SDL_KEYDOWN) {
             			if (event.key.keysym.sym == SDLK_ESCAPE) {
                 			quit = true;
-            			} 
-				else if (event.key.keysym.sym == SDLK_SPACE) {
+            			}else if (event.key.keysym.sym == SDLK_SPACE) {
                				paused = (paused ? false : true);
+            			}
+				else if (event.key.keysym.sym == SDLK_RETURN) {
+               				struct snapshot s;
+					s.iterations = iterations;
+					s.delay = delay;
+					
+                			quit = true;
             			}
 				else if (event.key.keysym.sym == SDLK_UP) {
                				if (delay > 10) delay -= 10;
