@@ -130,7 +130,15 @@ int main(int argc, char* argv[]){
                 			quit = true;
             			}
 				else if (event.key.keysym.sym == SDLK_SPACE) {
+            			}else if (event.key.keysym.sym == SDLK_SPACE) {
                				paused = (paused ? false : true);
+            			}
+				else if (event.key.keysym.sym == SDLK_RETURN) {
+               				struct snapshot s;
+					s.iterations = iterations;
+					s.delay = delay;
+					
+                			quit = true;
             			}
 				else if (event.key.keysym.sym == SDLK_UP) {
                				if (delay > 10) delay -= 10;
@@ -154,7 +162,7 @@ int main(int argc, char* argv[]){
 
 		SDL_RenderClear(textRenderer);
 		sprintf(iter_text, "Iterations: %lld", iterations);//<-
-		sprintf(delay_text, "Iteration Delay: %lld", delay);//<-
+		sprintf(delay_text, "Iteration Delay: %ld", delay);//<-
 	    	sprintf(alive_text,"Living cells: %d", living_cells);
     		sprintf(dead_text, "Dead   cells: %d", dead_cells);
 		renderText(font, iter_text, 30, 200, textRenderer);
