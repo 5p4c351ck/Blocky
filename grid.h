@@ -26,13 +26,11 @@ extern unsigned long delay;
 extern char grid[GRID_NUM][WIDTH][HEIGHT];
 
 struct snapshot {
-	/* To be added
-	 * Time of snapshot
-	 * Starting pattern
-	 */
+	time_t time_of_snapshot;
 	unsigned long long iterations;
 	unsigned long delay;
-	char grid[GRID_NUM][WIDTH][HEIGHT];
+	char initial_pattern[WIDTH][HEIGHT];
+	char grid[WIDTH][HEIGHT];
 };
 
 /* API */
@@ -41,5 +39,5 @@ void populate_grid(char array[GRID_NUM][WIDTH][HEIGHT], int current_grid);
 int print_grid(char array[GRID_NUM][WIDTH][HEIGHT], SDL_Renderer* renderer, SDL_Rect* rect, SDL_Surface* surface, int xOffset, int yOffset, int current_grid);
 int check_neighbours(char array[GRID_NUM][WIDTH][HEIGHT], int x, int y, int current_grid);
 void update_grid(char array[GRID_NUM][WIDTH][HEIGHT], int* current_grid, int* next_grid);
-
+void copy_grid(char array[GRID_NUM][WIDTH][HEIGHT], char array_copy[WIDTH][HEIGHT], int current_grid);
 #endif

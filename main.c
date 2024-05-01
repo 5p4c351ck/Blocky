@@ -7,6 +7,7 @@ static int dead_cells = 0;
 static int current = 0;
 static int next = 1;
 
+struct snapshot s;
 unsigned long delay = 100;
 
 int main(int argc, char* argv[]){
@@ -92,7 +93,8 @@ int main(int argc, char* argv[]){
 	srand(clock());
 
     	clear_grid(grid);
-    	populate_grid(grid, current);	
+    	populate_grid(grid, current);
+	copy_grid(grid, s.initial_pattern, current);
 
     	bool quit = false;
     	bool paused = false;
@@ -105,7 +107,28 @@ int main(int argc, char* argv[]){
 			else if (event.type == SDL_KEYDOWN) {
             			if (event.key.keysym.sym == SDLK_ESCAPE) {
                 			quit = true;
-            			} 
+            			}
+				else if (event.key.keysym.sym == SDLK_RETURN) {
+							time(&s.time_of_snapshot);
+							s.delay = delay;
+							s.iterations = iterations;
+							copy_grid(grid, s.grid, current);
+
+							char filename[20];
+							strftime(filename, sizeof(filename), "%Y-%m-%d", localtime(&s.time_of_snapshot));
+    						FILE *file = fopen(filename, "wb");
+    						if (file == NULL) {
+    						    perror("Error opening snapshot file");
+    						    return 1;
+    						}
+    						if (fwrite(&s, sizeof(struct snapshot), 1, file) != 1) {
+    						    perror("Error writing to snapshot file");
+    						    fclose(file);
+    						    return 1;
+    						}
+							fclose(file);
+                			quit = true;
+            			}
 				else if (event.key.keysym.sym == SDLK_SPACE) {
                				paused = (paused ? false : true);
             			}

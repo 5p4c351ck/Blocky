@@ -66,24 +66,32 @@ int check_neighbours(char array[GRID_NUM][WIDTH][HEIGHT], int x, int y, int curr
 
 void update_grid(char array[GRID_NUM][WIDTH][HEIGHT], int* current_grid, int* next_grid){
 	for (int i = 0; i < WIDTH; i++) {
-        for (int j = 0; j < HEIGHT; j++) {
-            int neighbors = check_neighbours(array, i, j, (*current_grid));
-            if (grid[(*current_grid)][i][j] == 1) {
-                if (neighbors < 2 || neighbors > 3) {
-                    grid[(*next_grid)][i][j] = 0; /*Cell dies due to underpopulation or overcrowding*/
-                } else {
-                    grid[(*next_grid)][i][j] = 1; /*Cell survives*/
-                }
-            } else {
-                if (neighbors == 3) {
-                    grid[(*next_grid)][i][j] = 1; /*Cell is born*/
-                } else {
-                    grid[(*next_grid)][i][j] = 0; /*Cell remains dead*/
-                }
-            }
-        }
+        	for (int j = 0; j < HEIGHT; j++) {
+            		int neighbors = check_neighbours(array, i, j, (*current_grid));
+            		if (grid[(*current_grid)][i][j] == 1) {
+                		if (neighbors < 2 || neighbors > 3) {
+                    			grid[(*next_grid)][i][j] = 0; /*Cell dies due to underpopulation or overcrowding*/
+                		}else {
+                    			grid[(*next_grid)][i][j] = 1; /*Cell survives*/
+                		}
+            		}else {
+                		if (neighbors == 3) {
+                    			grid[(*next_grid)][i][j] = 1; /*Cell is born*/
+                		} else {
+                    			grid[(*next_grid)][i][j] = 0; /*Cell remains dead*/
+                		}
+            		}
+        	}
     }
     int temp = (*current_grid);
     (*current_grid) = (*next_grid);
     (*next_grid) = temp;
+}
+
+void copy_grid(char array[GRID_NUM][WIDTH][HEIGHT], char array_copy[WIDTH][HEIGHT], int current_grid){
+	for (int i = 0; i < WIDTH; i++) {
+        	for (int j = 0; j < HEIGHT; j++) {
+        		array_copy[i][j] = grid[(current_grid)][i][j];
+		}
+	}
 }
