@@ -15,13 +15,13 @@ int main(int argc, char* argv[]){
 	struct SDL_info sdlInfo;
 
 	initialization(&sdlInfo);
-
+	
 	SDL_Rect rect = {0, 0, SQUARE_WIDTH, SQUARE_HEIGHT};
     	
 	srand(clock());
 
-    clear_grid(grid);
-    populate_grid(grid, current);
+    	clear_grid(grid);
+    	populate_grid(grid, current);
 	copy_grid(grid, s.initial_pattern, current);
 
     	bool quit = false;
@@ -58,7 +58,6 @@ int main(int argc, char* argv[]){
                 			quit = true;
             			}
 				else if (event.key.keysym.sym == SDLK_SPACE) {
-            			
                				paused = (paused ? false : true);
 				}
 				else if (event.key.keysym.sym == SDLK_UP) {
@@ -73,17 +72,16 @@ int main(int argc, char* argv[]){
 			SDL_Delay(delay);
 			SDL_FillRect(sdlInfo.surface, NULL, SDL_MapRGB(sdlInfo.surface->format, 0, 0, 0));
 		
-	        living_cells = print_grid(grid,sdlInfo.renderer, &rect, sdlInfo.surface, sdlInfo.xOffset, sdlInfo.yOffset, current);
+	        	living_cells = print_grid(grid,sdlInfo.renderer, &rect, sdlInfo.surface, sdlInfo.xOffset, sdlInfo.yOffset, current);
 			dead_cells = (CELL_NUM - living_cells);
 
 			SDL_UpdateTexture(sdlInfo.texture, NULL, sdlInfo.surface->pixels, sdlInfo.surface->pitch);
-       		SDL_RenderCopy(sdlInfo.renderer, sdlInfo.texture, NULL, NULL);
-       		SDL_RenderPresent(sdlInfo.renderer);
-
+       			SDL_RenderCopy(sdlInfo.renderer, sdlInfo.texture, NULL, NULL);
+       			SDL_RenderPresent(sdlInfo.renderer);
 			printTexts(sdlInfo.font, sdlInfo.textRenderer, delay, iterations, living_cells, dead_cells);
 
-     		update_grid(grid, &current, &next);
-       		iterations++;
+     			update_grid(grid, &current, &next);
+       			iterations++;
 		}
 		else{
 	    	printPausedText(sdlInfo.font, sdlInfo.renderer, sdlInfo.windowWidth);
@@ -91,13 +89,6 @@ int main(int argc, char* argv[]){
 		}
     	}
 
-    /* Cleanup */
-    SDL_DestroyWindow(sdlInfo.window);
-    SDL_DestroyWindow(sdlInfo.textWindow);
-    SDL_DestroyRenderer(sdlInfo.renderer);
-    SDL_DestroyRenderer(sdlInfo.textRenderer);
-    SDL_FreeSurface(sdlInfo.surface);
-    SDL_DestroyTexture(sdlInfo.texture); 
-    SDL_Quit();
+    cleanUp(&sdlInfo);
     return 0;
 }
