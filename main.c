@@ -80,22 +80,6 @@ int main(int argc, char* argv[]){
        			SDL_RenderPresent(sdlInfo.renderer);
 			printTexts(sdlInfo.font, sdlInfo.textRenderer, delay, iterations, living_cells, dead_cells);
 
-		SDL_RenderClear(textRenderer);
-		sprintf(iter_text, "Iterations: %lld", iterations);//<-
-		sprintf(delay_text, "Iteration Delay: %ld", delay);//<-
-	    	sprintf(alive_text,"Living cells: %d", living_cells);
-    		sprintf(dead_text, "Dead   cells: %d", dead_cells);
-		renderText(font, iter_text, 135, 200, textRenderer);
-		renderText(font, delay_text, 135, 230, textRenderer);
-		renderText(font, total_text, 135, 270, textRenderer);
-		renderText(font, alive_text,135, 300, textRenderer);
-		renderText(font, dead_text, 135, 330, textRenderer);
-	    	renderText(font, arrow_text, 30, 600, textRenderer);
-	    	renderText(font, pause_text, 30, 650, textRenderer);
-	    	renderText(font, save_text, 30, 700, textRenderer);
-	    	renderText(font, quit_text, 30, 750, textRenderer);
-		SDL_RenderPresent(textRenderer);
-
      		update_grid(grid, &current, &next);
        		iterations++;
      			update_grid(grid, &current, &next);
