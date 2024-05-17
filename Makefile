@@ -14,7 +14,7 @@ rendering.o: rendering.c
 	gcc rendering.c -c -o rendering.o
 
 main.o: main.c
-	gcc main.c -c -o main.o
+	gcc main.c -c -g  -o main.o
 
 clean:
 	rm $(objs) $(executable)
