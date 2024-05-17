@@ -80,8 +80,6 @@ int main(int argc, char* argv[]){
        			SDL_RenderPresent(sdlInfo.renderer);
 			printTexts(sdlInfo.font, sdlInfo.textRenderer, delay, iterations, living_cells, dead_cells);
 
-     		update_grid(grid, &current, &next);
-       		iterations++;
      			update_grid(grid, &current, &next);
        			iterations++;
 		}
