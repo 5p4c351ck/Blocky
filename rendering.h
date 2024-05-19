@@ -1,4 +1,5 @@
 #ifndef RENDERING_H
+#define RENDERING_H
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -23,5 +24,5 @@ void cleanUp(struct SDL_info *s);
 void renderText(TTF_Font *font, const char* text, int x, int y, SDL_Renderer *renderer);
 void printTexts(TTF_Font *font, SDL_Renderer *renderer, unsigned long del, unsigned long long iter, int l, int d);
 void printPausedText(TTF_Font *font, SDL_Renderer *renderer, int windowWidth);
-#define RENDERING_H
+
 #endif

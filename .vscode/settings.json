@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "sdl.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "getopt.h": "c",
+        "string.h": "c",
+        "grid.h": "c",
+        "events.h": "c",
+        "sdl_ttf.h": "c"
     }
 }

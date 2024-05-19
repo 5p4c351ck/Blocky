@@ -33,6 +33,7 @@ struct snapshot {
 	char grid[WIDTH][HEIGHT];
 };
 
+
 /* API */
 void clear_grid(char array[GRID_NUM][WIDTH][HEIGHT]);
 void populate_grid(char array[GRID_NUM][WIDTH][HEIGHT], int current_grid);
