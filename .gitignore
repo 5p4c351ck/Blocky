@@ -1,6 +1,8 @@
+#project specific
 blocky
 .vscode
 old_project
+imgui.ini
 
 # Prerequisites
 *.d
