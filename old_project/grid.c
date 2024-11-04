@@ -49,7 +49,6 @@ int print_grid(char array[GRID_NUM][WIDTH][HEIGHT], SDL_Renderer* renderer, SDL_
 }
 
 int check_neighbours(char array[GRID_NUM][WIDTH][HEIGHT], int x, int y, int current_grid){
-
 	int count = 0;
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {

@@ -1,23 +1,22 @@
-objs = grid.o rendering.o main.o options.o
-executable = blocky
+cc = g++
+cflags = -Iexternal/imgui -Iexternal/imgui/backends -I/usr/include
+lflags = -L/usr/lib -lvulkan -lglfw
+target = blocky
+SRCS = src/main.cpp external/imgui/imgui.cpp external/imgui/imgui_draw.cpp external/imgui/imgui_widgets.cpp \
+	   external/imgui/imgui_tables.cpp external/imgui/backends/imgui_impl_vulkan.cpp external/imgui/backends/imgui_impl_glfw.cpp \
+	   external/imgui/imgui_demo.cpp
+	   
+OBJS = $(SRCS:.cpp=.o)
 
-all: $(executable)
-
-$(executable): $(objs) 
-	gcc $(objs) -o $(executable) -lSDL2 -lSDL2_ttf
-
-grid.o: grid.c
-	gcc grid.c -c -o grid.o
 
 
-rendering.o: rendering.c
-	gcc rendering.c -c -o rendering.o
+all: $(target)
 
-options.o: options.c
-	gcc options.c -c -o options.o
+%.o : %.cpp
+	$(cc) -c $< -o $@ $(cflags)
 
-main.o: main.c
-	gcc main.c -c -g  -o main.o
+$(target): $(OBJS) 
+	$(cc) $^ -o $@ $(lflags)
 
 clean:
-	rm $(objs) $(executable)
+	rm $(OBJS) $(target)
