@@ -2,43 +2,34 @@
 #define CELLULARAUTOMATA_HPP
 
 
-#include <chrono>
-#include <vector>
+
 #include <algorithm>
-#include <random>
+#include <memory>
 
 #include "grid.hpp"
+#include "caProperties.hpp"
 
-
-enum class Dimensionality {ONE_D = 1, TWO_D, THREE_D};
-enum class StateSpace {BINARY, MULTI};
-enum class NeighborhoodType {VON_NEUMANN, MOORE};
-enum class BoundaryCondition {WRAP_AROUND, FIXED, REFLECTIVE};
-enum class CellState {DEAD, ALIVE};
 
 
 class CellularAutomata  {
     public:
-        CellularAutomata ();
-
+        CellularAutomata (const caProperties& prop) : caproperties(prop) {
+            if(caproperties.dm == Dimensionality::ONE_D){
+                gridInstance = std::make_unique<Grid1d>(prop.gridWidth, 0);
+            }
+            else if(caproperties.dm == Dimensionality::TWO_D){
+                gridInstance = std::make_unique<Grid2d>(prop.gridWidth, prop.gridHeight);
+            }
+            else if(caproperties.dm == Dimensionality::THREE_D){
+                gridInstance = nullptr;
+            }
+        };
+        /* API */
         int step();
-        void getSnapshot();
-        Dimensionality dimensionality() const;
-        void dimensionality(Dimensionality d);
-        StateSpace getStateSpace();
-        NeighborhoodType getNeighborhoodType();
-        BoundaryCondition getBoundaryCondition();
-        int getRule();
-        unsigned long long getMaxSteps();
-        void getGrid();
-
+        void properties(caProperties prop);
+        caProperties properties() const;
     private:
-        Dimensionality dimensionality;
-        StateSpace stateSpace;
-        NeighborhoodType neighborhood;
-        BoundaryCondition boundaryCondition;
-        int rule;
-        unsigned long long maxSteps;
-        Grid* gridPointer;
-}
+        caProperties caproperties;
+        std::unique_ptr<Grid> gridInstance;
+};
 #endif
