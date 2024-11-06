@@ -8,13 +8,15 @@ enum class NeighborhoodType {VON_NEUMANN, MOORE};
 enum class BoundaryCondition {WRAP_AROUND, FIXED, REFLECTIVE};
 
 
-struct caProperties{
+struct caProperties{ 
     Dimensionality      dm;
     StateSpace          ss;
     NeighborhoodType    nt;
     BoundaryCondition   bc;
-    int gridWidth;
-    int gridHeight;
+    unsigned int ruleNumber;
+    unsigned int gridWidth;
+    unsigned int gridHeight;
+    unsigned int currentIteration;
     unsigned long long maxSteps;
 };
 #endif

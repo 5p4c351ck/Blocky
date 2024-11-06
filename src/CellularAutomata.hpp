@@ -3,8 +3,11 @@
 
 
 
-#include <algorithm>
-#include <memory>
+#include<functional>
+#include<algorithm>
+#include<memory>
+
+
 
 #include "grid.hpp"
 #include "caProperties.hpp"
@@ -23,7 +26,8 @@ class CellularAutomata  {
             else if(caproperties.dm == Dimensionality::THREE_D){
                 gridInstance = nullptr;
             }
-        };
+            caproperties.currentIteration = 0;
+        }
         /* API */
         int step();
         void properties(caProperties prop);

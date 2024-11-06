@@ -1,7 +1,8 @@
 #include "CellularAutomata.hpp"
 
 int CellularAutomata::step(){
-    return 0;
+    gridInstance->updateGrid(caproperties.ruleNumber);
+    return caproperties.currentIteration += 1;
 }
 
 void CellularAutomata::properties(caProperties prop){

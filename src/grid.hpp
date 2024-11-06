@@ -2,8 +2,8 @@
 #define GRID_HPP
 
 #include<vector>
-#include <chrono>
-#include <random>
+#include<chrono>
+#include<random>
 
 
 
@@ -15,15 +15,22 @@ class Grid {
         /* API */
         virtual void clearGrid() = 0;
         virtual void pseudorandomPopulateGrid() = 0;
-        //virtual void updateGrid()= 0;
+        virtual void updateGrid(unsigned int ruleNumber) = 0;
+//        virtual unsigned int getCellNum() = 0;
         void swapGrid();
     protected:
-        virtual std::vector<CellState> getNeighbours (unsigned int width, unsigned int height) const = 0;
+        virtual std::vector<CellState> getNeighborhood (unsigned int cellWidth, unsigned int cellHeight) const = 0;
+        virtual CellState applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood) = 0;
         int tensor_width;
         int tensor_height;
         int tensor_depth = 2;
         int current_depth = 0;
         int next_depth = 1;
+        unsigned int cellNum;
+        int aliveCount;
+        int deadCount;
+        unsigned int randomSeed;
+
 };
 
 class Grid1d: public Grid {
@@ -41,14 +48,10 @@ class Grid1d: public Grid {
         /* API */
         void clearGrid() override;
         void pseudorandomPopulateGrid() override;
-        //void updateGrid() override;
+        void updateGrid(unsigned int ruleNumber) override;
     private:
-        std::vector<CellState> getNeighbours (unsigned int width, unsigned int height) const override;
-        int cell_num = tensor_width; 
-        unsigned int randomSeed;
-        unsigned int currentIteration;
-        int aliveCount;
-        int deadCount;
+        std::vector<CellState> getNeighborhood (unsigned int cellWidth, unsigned int cellHeight) const override;
+        CellState applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood) override;
         std::vector<std::vector<CellState>> tensor;
 };
 
@@ -67,14 +70,10 @@ class Grid2d: public Grid {
         /* API */
         void clearGrid() override;
         void pseudorandomPopulateGrid() override;
-        //void updateGrid() override;
+        void updateGrid(unsigned int ruleNumber) override;
     private:
-        std::vector<CellState> getNeighbours (unsigned int width, unsigned int height) const override;
-        int cell_num = tensor_width * tensor_height;
-        unsigned int randomSeed;
-        unsigned int currentIteration;
-        int aliveCount;
-        int deadCount;
+        std::vector<CellState> getNeighborhood (unsigned int cellWidth, unsigned int cellHeight) const override;
+        CellState applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood) override;
         std::vector<std::vector<std::vector<CellState>>> tensor;
 };
 #endif

@@ -2,6 +2,12 @@
 
 
 
+
+
+
+
+
+
 void Grid::swapGrid(){
 	std::swap(current_depth, next_depth);
 }
@@ -23,21 +29,44 @@ void Grid1d::pseudorandomPopulateGrid(){
 	return;
 }
 
-std::vector<CellState> Grid1d::getNeighbours (unsigned int width, unsigned int height) const{
-		std::vector<CellState> neighbours;
-		if(width > 0 && width < tensor.size()){
-			neighbours.push_back(tensor[width - 1][current_depth]);
-		}
-		if(width < tensor.size()){
-			neighbours.push_back(tensor[width][current_depth]);
-		}
-		if(width < tensor.size() - 1){
-			neighbours.push_back(tensor[width + 1][current_depth]);
-		}
-		return neighbours;
+void Grid1d::updateGrid(unsigned int ruleNumber){
+	std::vector<CellState> neighborhood;
+	for(unsigned int i = 0; i < tensor.size(); i++){
+		neighborhood = getNeighborhood(i,0);
+		tensor[i][next_depth] = applyRule(ruleNumber, neighborhood);
+	}
+	swapGrid();
 }
 
+std::vector<CellState> Grid1d::getNeighborhood (unsigned int cellWidth, unsigned int cellHeight) const{
+		std::vector<CellState> neighborhood;
+		if(cellWidth > 0 && cellWidth < tensor.size()){
+			neighborhood.push_back(tensor[cellWidth - 1][current_depth]);
+		}
+		else{
+			neighborhood.push_back(CellState::DEAD);
+		}
+		if(cellWidth < tensor.size()){
+			neighborhood.push_back(tensor[cellWidth][current_depth]);
+		}
+		else{
+			neighborhood.push_back(CellState::DEAD);
+		}
+		if(cellWidth < tensor.size() - 1){
+			neighborhood.push_back(tensor[cellWidth + 1][current_depth]);
+		}
+		else{
+			neighborhood.push_back(CellState::DEAD);
+		}
+		return neighborhood;
+}
 
+CellState Grid1d::applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood) {
+    int neighbors = (static_cast<int>(neighborhood[0]) << 2) |
+				    (static_cast<int>(neighborhood[1]) << 1) | 
+					(static_cast<int>(neighborhood[2]));
+    return static_cast<CellState>(((ruleNumber >> neighbors) & 1));
+}
 
 void Grid2d::clearGrid(){
     tensor.clear();
@@ -58,19 +87,26 @@ void Grid2d::pseudorandomPopulateGrid(){
 	return;
 }
 
-std::vector<CellState> Grid2d::getNeighbours(unsigned int width, unsigned int height) const{
-	std::vector<CellState> neighbours;
+void Grid2d::updateGrid(unsigned int ruleNumber){
+	return;
+}
+
+std::vector<CellState> Grid2d::getNeighborhood(unsigned int cellWidth, unsigned int cellHeight) const{
+	std::vector<CellState> neighborhood;
 	for (int i = -1; i <= 1; i++) {
 		for (int j = -1; j <= 1; j++) {
 			if (i == 0 && j == 0) continue;
-			int nx = width + i;
-			int ny = height + j;
+			int nx = cellWidth + i;
+			int ny = cellHeight + j;
 			if (nx >= 0 && nx < tensor.size() && ny >= 0 && ny < tensor.size()) {
-				neighbours.push_back(tensor[nx][ny][current_depth]);
+				neighborhood.push_back(tensor[nx][ny][current_depth]);
 			}
 		}
 	}
-	return neighbours;
+	return neighborhood;
 }
 
+CellState Grid2d::applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood){
+	return CellState::DEAD;
+}
 
