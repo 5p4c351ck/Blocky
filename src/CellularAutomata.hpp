@@ -7,8 +7,6 @@
 #include<algorithm>
 #include<memory>
 
-
-
 #include "grid.hpp"
 #include "caProperties.hpp"
 
@@ -16,16 +14,9 @@
 
 class CellularAutomata  {
     public:
-        CellularAutomata (const caProperties& prop) : caproperties(prop) {
-            if(caproperties.dm == Dimensionality::ONE_D){
-                gridInstance = std::make_unique<Grid1d>(prop.gridWidth, 0);
-            }
-            else if(caproperties.dm == Dimensionality::TWO_D){
-                gridInstance = std::make_unique<Grid2d>(prop.gridWidth, prop.gridHeight);
-            }
-            else if(caproperties.dm == Dimensionality::THREE_D){
-                gridInstance = nullptr;
-            }
+        CellularAutomata (const caProperties& prop) 
+        : caproperties(prop), gridInstance(caproperties.il)
+        {   
             caproperties.currentIteration = 0;
         }
         /* API */
@@ -34,6 +25,6 @@ class CellularAutomata  {
         caProperties properties() const;
     private:
         caProperties caproperties;
-        std::unique_ptr<Grid> gridInstance;
+        Grid gridInstance;
 };
 #endif
