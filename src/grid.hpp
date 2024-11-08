@@ -17,8 +17,8 @@ class Grid {
         void clearGrid();
         void pseudorandomPopulateGrid();
         void updateGrid(unsigned int ruleNumber);
-    protected:
-        std::vector<CellState> getNeighborhood (std::vector<size_t>& indices) const;
+    private:
+        std::vector<CellState> getNeighborhood (size_t width, size_t height, size_t depth) const;
         CellState applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood);
         Tensor tensor;
         unsigned int cellNum;

@@ -9,7 +9,7 @@ void Tensor::swap(){
 }
 
 size_t Tensor::size() const{
-    dataCurrent.size();
+    return dataCurrent.size();
 }
 
 size_t Tensor::dimensionNumber() const{
@@ -17,11 +17,15 @@ size_t Tensor::dimensionNumber() const{
 }
 
 
-CellState Tensor::cell(const std::vector<size_t>& indices) const{
+CellState Tensor::cell(size_t width, size_t height, size_t depth) const{
+    std::vector<size_t> indices{width,height,depth};
+    indices.resize(dimensionNumber());
     return dataCurrent[computeIndex(indices)];
 }
 
-void Tensor::cell(const std::vector<size_t>& indices, CellState state){
+void Tensor::cell(size_t width, size_t height, size_t depth, CellState state){
+    std::vector<size_t> indices{width,height,depth};
+    indices.resize(dimensionNumber());
     dataCurrent[computeIndex(indices)] = state;
 }
 
@@ -34,14 +38,11 @@ void Tensor::initializeStrides() {
             }
         }
 
-size_t Tensor::computeIndex(const std::vector<size_t>& indices) const {
-    if (indices.size() != dimensions.size()) {
-        return -1;
-    }
+size_t Tensor::computeIndex(std::vector<size_t>& indices) const {
     size_t flat_index = 0;
     for (size_t i = 0; i < indices.size(); ++i) {
         if (indices[i] >= dimensions[i]) {
-            return -1;
+            indices[i] = (dimensions[i] - 1);
         }
         flat_index += indices[i] * strides[i];
     }

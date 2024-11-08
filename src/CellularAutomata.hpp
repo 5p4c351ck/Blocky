@@ -17,10 +17,12 @@ class CellularAutomata  {
         CellularAutomata (const caProperties& prop) 
         : caproperties(prop), gridInstance(caproperties.il)
         {   
+            caproperties.ss = StateSpace::BINARY; 
             caproperties.currentIteration = 0;
         }
         /* API */
         int step();
+        void pseudorandomPattern();
         void properties(caProperties prop);
         caProperties properties() const;
     private:

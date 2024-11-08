@@ -5,6 +5,10 @@ int CellularAutomata::step(){
     return caproperties.currentIteration += 1;
 }
 
+void CellularAutomata::pseudorandomPattern(){
+    gridInstance.pseudorandomPopulateGrid();
+}
+
 void CellularAutomata::properties(caProperties prop){
     return;
 }

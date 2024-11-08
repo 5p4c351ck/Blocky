@@ -22,14 +22,14 @@ class Tensor{
         void swap();
         size_t size() const;
         size_t dimensionNumber() const;
-        CellState cell(const std::vector<size_t>& indices) const;
-        void cell(const std::vector<size_t>& indices, CellState state);
+        CellState cell(size_t width, size_t height, size_t depth) const;
+        void cell(size_t width, size_t height, size_t depths, CellState state);
     private:
         std::vector<size_t> dimensions;
         std::vector<size_t> strides;
         std::vector<CellState> dataCurrent;
         std::vector<CellState> dataNext;
         void initializeStrides();
-        size_t computeIndex(const std::vector<size_t>& indices) const;
+        size_t computeIndex(std::vector<size_t>& indices) const;
 };
 #endif
