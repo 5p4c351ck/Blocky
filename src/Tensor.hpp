@@ -9,7 +9,7 @@ enum class CellState;
 
 class Tensor{
     public:
-        Tensor(std::initializer_list<size_t> dims) : dimensions(dims) {
+        Tensor(std::vector<size_t> dims) : dimensions(dims) {
         size_t capacity = 1;
         for (size_t dim : dimensions) {
             capacity *= dim;

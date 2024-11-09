@@ -15,9 +15,9 @@
 class CellularAutomata  {
     public:
         CellularAutomata (const caProperties& prop) 
-        : caproperties(prop), gridInstance(caproperties.il)
+        : caproperties(prop), gridInstance(prop.dims)
         {   
-            caproperties.ss = StateSpace::BINARY; 
+            caproperties.ss = StateSpace::BINARY;
             caproperties.currentIteration = 0;
         }
         /* API */

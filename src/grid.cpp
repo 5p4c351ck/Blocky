@@ -8,23 +8,36 @@ void Grid::pseudorandomPopulateGrid(){
     int lower_bound = 1;
     int upper_bound = 100;
 	std::random_device rd;
-	std::mt19937 gen(rd());
+	randomSeed = rd();
+	std::mt19937 gen(randomSeed);
 	std::uniform_int_distribution<> distr(lower_bound, upper_bound);
+	int aliveCells = 0;
     for(size_t i = 0; i < tensor.size(); i++){
 		int random_number = distr(gen) % 2;
+		if(random_number){aliveCells += 1;}
 		tensor.cell(i, 0, 0, static_cast<CellState>(random_number));
 	}
+	aliveCount = aliveCells;
+	setDeadCellCount(aliveCount);
 	return;
 }
 
 void Grid::updateGrid(unsigned int ruleNumber){
 	std::vector<CellState> neighborhood;
+	CellState state;
+	int aliveCells = 0;
 	if(tensor.dimensionNumber() == 1){
 		for(size_t i = 0; i < tensor.size(); i++){
 			neighborhood = getNeighborhood(i,0,0);
-			tensor.cell(i, 0, 0, applyRule(ruleNumber, neighborhood));
+			state = applyRule(ruleNumber, neighborhood);
+			tensor.cell(i, 0, 0, state);
+			if(static_cast<int>(state)){
+				aliveCells += 1;
+			}
 		}
 	}
+	aliveCount = aliveCells;
+	setDeadCellCount(aliveCount);
 	tensor.swap();
 }
 
@@ -54,8 +67,10 @@ std::vector<CellState> Grid::getNeighborhood (size_t width, size_t height, size_
 }
 
 CellState Grid::applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood) {
-    int neighbors = (static_cast<int>(neighborhood[0]) << 2) |
-				    (static_cast<int>(neighborhood[1]) << 1) | 
-					(static_cast<int>(neighborhood[2]));
+    int neighbors = ( (static_cast<int>(neighborhood[0])) << 2) | ((static_cast<int>(neighborhood[1])) << 1) | (static_cast<int>(neighborhood[2]));
     return static_cast<CellState>(((ruleNumber >> neighbors) & 1));
+}
+
+void Grid::setDeadCellCount(int aliveCells){
+	deadCount = cellNum - aliveCells;
 }

@@ -7,17 +7,10 @@ enum class StateSpace           {BINARY, MULTI};
 enum class NeighborhoodType     {VON_NEUMANN, MOORE};
 enum class BoundaryCondition    {WRAP_AROUND, FIXED, REFLECTIVE};
 
-struct caProperties{ 
+struct caProperties{
 
-    caProperties(size_t width) : il({width}) {
-        dm = Dimensionality::ONE_D;
-    };
-    caProperties(size_t width, size_t height) : il({width, height}) {
-        dm = Dimensionality::TWO_D;
-    };
-    caProperties(size_t width, size_t height, size_t depth) : il({width, height, depth}) {
-        dm = Dimensionality::THREE_D;
-    };
+    caProperties(std::vector<size_t> v) : dims(v) {
+    }
 
     Dimensionality      dm;
     StateSpace          ss;
@@ -27,7 +20,7 @@ struct caProperties{
     size_t              gridWidth;
     size_t              gridHeight;
     size_t              gridDepth;
-    std::initializer_list<size_t> il;
+    std::vector<size_t> dims;
     unsigned int        currentIteration;
     unsigned long long  maxSteps;
 };
