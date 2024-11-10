@@ -19,6 +19,9 @@ class Grid {
         void clearGrid();
         void pseudorandomPopulateGrid();
         void updateGrid(unsigned int ruleNumber);
+        unsigned int alive();
+        unsigned int dead();
+        unsigned int cellsAll();     
     private:
         std::vector<CellState> getNeighborhood (size_t width, size_t height, size_t depth) const;
         CellState applyRule(unsigned int ruleNumber, const std::vector<CellState>& neighborhood);

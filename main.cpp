@@ -22,6 +22,9 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+
+#include "src/CellularAutomata.hpp"
+
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
 #define VOLK_IMPLEMENTATION
@@ -389,6 +392,36 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
+
+
+
+
+
+
+            ImVec4 titleBarColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Example color for the title bar
+            ImVec4 titleBarActiveColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Color for active title bar
+            ImVec4 borderColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f);
+            ImVec4 buttonColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); // Normal button color (light green)
+            ImVec4 buttonHoveredColor = ImVec4(0.5f, 1.0f, 0.5f, 1.0f); // Button color when hovered (lighter green)
+            ImVec4 buttonActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); // Button color when active (darker green)
+            ImVec4 sliderColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); // Normal slider color (light green)
+            ImVec4 sliderActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); // Slider color when active (darker green)
+            ImVec4 sliderFrameColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f); // Slider frame background color (dark gray)
+            ImVec4 sliderActiveFrameColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f); // Active frame background color
+            ImVec4 sliderHoveredFrameColor = ImVec4(0.6f, 0.6f, 0.6f, 1.0f); // Hovered frame background color
+            ImVec4 tickColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); // Tick color (light green)
+            ImVec4 seperatorColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); 
+            ImVec4 seperatorHoveredColor = ImVec4(0.5f, 1.0f, 0.5f, 1.0f); 
+            ImVec4 seperatorActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); 
+            ImVec4 resizeGripColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); 
+            ImVec4 resizeGripHoveredColor = ImVec4(0.5f, 1.0f, 0.5f, 1.0f); 
+            ImVec4 resizeGripActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); 
+
+
+
+
+
+
 // Main code
 int main(int, char**)
 {
@@ -471,7 +504,26 @@ int main(int, char**)
 
     // Our state
     bool lock_menu_window = false;
-    ImVec4 clear_color = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+    ImVec4 bg_color = ImVec4(0.980, 0.643, 2.20f, 0.961);
+    ImVec4 cell_color =  ImVec4(0.529, 1.00f, 0.835, 1.00f);
+
+    
+                std::vector<size_t> v{10};
+                caProperties p{v};    
+                p.ruleNumber = 0x1E;
+                
+                CellularAutomata ca{p};
+                ca.pseudorandomPattern();
+
+            bool paused = false;
+            static float f = 0.0f;
+            static int cells = ca.cellsAll();
+            static int aliveCells = ca.alive();
+            static int deadCells = ca.dead();
+            static int iteration = 0;
+            float delay = 0.2f;
+            float deadline = 0.0f;
+
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -511,30 +563,6 @@ int main(int, char**)
         */
 
         {
-            static float f = 0.0f;
-            static int aliveCells = 0;
-            static int deadCells = 0;
-            static int iteration = 0;
-
-            ImVec4 titleBarColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Example color for the title bar
-            ImVec4 titleBarActiveColor = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Color for active title bar
-            ImVec4 borderColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f);
-            ImVec4 buttonColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); // Normal button color (light green)
-            ImVec4 buttonHoveredColor = ImVec4(0.5f, 1.0f, 0.5f, 1.0f); // Button color when hovered (lighter green)
-            ImVec4 buttonActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); // Button color when active (darker green)
-            ImVec4 sliderColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); // Normal slider color (light green)
-            ImVec4 sliderActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); // Slider color when active (darker green)
-            ImVec4 sliderFrameColor = ImVec4(0.2f, 0.2f, 0.2f, 1.0f); // Slider frame background color (dark gray)
-            ImVec4 sliderActiveFrameColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f); // Active frame background color
-            ImVec4 sliderHoveredFrameColor = ImVec4(0.6f, 0.6f, 0.6f, 1.0f); // Hovered frame background color
-            ImVec4 tickColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); // Tick color (light green)
-            ImVec4 seperatorColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); 
-            ImVec4 seperatorHoveredColor = ImVec4(0.5f, 1.0f, 0.5f, 1.0f); 
-            ImVec4 seperatorActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); 
-            ImVec4 resizeGripColor = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); 
-            ImVec4 resizeGripHoveredColor = ImVec4(0.5f, 1.0f, 0.5f, 1.0f); 
-            ImVec4 resizeGripActiveColor = ImVec4(0.3f, 0.6f, 0.3f, 1.0f); 
-
             ImGui::PushStyleColor(ImGuiCol_Separator, seperatorColor);
             ImGui::PushStyleColor(ImGuiCol_SeparatorHovered, seperatorHoveredColor); // Slider frame background color
             ImGui::PushStyleColor(ImGuiCol_SeparatorActive, seperatorActiveColor); // Active frame background color
@@ -562,15 +590,16 @@ int main(int, char**)
             ImGui::Begin("Menu");
             ImGui::Text("Ca Information");            
             ImGui::NewLine();
+            ImGui::Text("Cells: %d", cells);
             ImGui::Text("Alive cells: %d", aliveCells);
             ImGui::Text("Dead  cells: %d", deadCells);
             if (ImGui::Button("Pause"))                                  // Buttons return true when clicked (most widgets return true when edited/activated)
-                iteration++;
+                paused = !paused;
             ImGui::SameLine();
             ImGui::Text("Iteration: %d", iteration);
-            ImGui::SliderFloat("Simulation Speed", &f, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("Background color", (float*)&clear_color); // Edit 3 floats representing a color
-            
+            ImGui::SliderFloat("Simulation delay", &delay, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
+            ImGui::ColorEdit3("Background color", (float*)&bg_color); // Edit 3 floats representing a color
+            ImGui::ColorEdit3("Cell color", (float*)&cell_color); // Edit 3 floats representing a color
             ImGui::Checkbox("Lock Menu", &lock_menu_window);
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
@@ -583,19 +612,33 @@ int main(int, char**)
         {
         }
 
+        
+
+        if (ImGui::GetTime() >= deadline && !paused) {
+            iteration = ca.step();
+            aliveCells = ca.alive();
+            deadCells = ca.dead();
+            deadline = ImGui::GetTime() + delay;
+
+
+
+            
+        }
+
 
           // Draw a white rectangle at the center of the frame
+    
     {
         // Get the draw list
         ImDrawList* drawList = ImGui::GetBackgroundDrawList();
 
         // Define the rectangle's position and size
         ImVec2 windowSize = ImGui::GetIO().DisplaySize; // Get the current display size
-        ImVec2 rectSize(100.0f, 50.0f); // Size of the rectangle
+        ImVec2 rectSize(10.0f, 10.0f); // Size of the rectangle
         ImVec2 rectPos((windowSize.x - rectSize.x) * 0.5f, (windowSize.y - rectSize.y) * 0.5f); // Center position
 
         // Define the color (white)
-        ImU32 color = IM_COL32(255, 255, 255, 255); // White with full opacity
+        ImU32 color = ImGui::GetColorU32(cell_color);
 
         // Draw the filled rectangle
         drawList->AddRectFilled(rectPos, ImVec2(rectPos.x + rectSize.x, rectPos.y + rectSize.y), color);
@@ -610,10 +653,10 @@ int main(int, char**)
         const bool is_minimized = (draw_data->DisplaySize.x <= 0.0f || draw_data->DisplaySize.y <= 0.0f);
         if (!is_minimized)
         {
-            wd->ClearValue.color.float32[0] = clear_color.x * clear_color.w;
-            wd->ClearValue.color.float32[1] = clear_color.y * clear_color.w;
-            wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
-            wd->ClearValue.color.float32[3] = clear_color.w;
+            wd->ClearValue.color.float32[0] = bg_color.x * bg_color.w;
+            wd->ClearValue.color.float32[1] = bg_color.y * bg_color.w;
+            wd->ClearValue.color.float32[2] = bg_color.z * bg_color.w;
+            wd->ClearValue.color.float32[3] = bg_color.w;
             FrameRender(wd, draw_data);
             FramePresent(wd);
         }

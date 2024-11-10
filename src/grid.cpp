@@ -41,6 +41,10 @@ void Grid::updateGrid(unsigned int ruleNumber){
 	tensor.swap();
 }
 
+unsigned int Grid::alive(){return aliveCount;}
+unsigned int Grid::dead(){return deadCount;}
+unsigned int Grid::cellsAll(){return cellNum;}
+
 std::vector<CellState> Grid::getNeighborhood (size_t width, size_t height, size_t depth)  const{
 		std::vector<CellState> neighborhood;
 		if(tensor.dimensionNumber() == 1){

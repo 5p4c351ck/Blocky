@@ -24,6 +24,9 @@ class CellularAutomata  {
         int step();
         void pseudorandomPattern();
         void properties(caProperties prop);
+        unsigned int alive();
+        unsigned int dead();
+        unsigned int cellsAll();
         caProperties properties() const;
     private:
         caProperties caproperties;

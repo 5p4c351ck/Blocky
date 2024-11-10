@@ -17,4 +17,8 @@ caProperties CellularAutomata::properties() const{
     return caproperties;
 }
 
+unsigned int CellularAutomata::alive(){return gridInstance.alive();}
+unsigned int CellularAutomata::dead(){return gridInstance.dead();}
+unsigned int CellularAutomata::cellsAll(){return gridInstance.cellsAll();}
+
 
