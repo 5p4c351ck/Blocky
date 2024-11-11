@@ -513,13 +513,14 @@ int main(int, char**)
     std::vector<size_t> v{60};
     caProperties p{v};    
     p.ruleNumber = 0x1E;
-
+    std::vector<std::vector<CellState>> vec;
     CellularAutomata ca{p};
     ca.pseudorandomPattern();
+    ca.grid(vec);
 
     bool paused = false;
     static float f = 0.0f;
-    std::vector<std::vector<CellState>> vec;
+    
     const caProperties& props = ca.properties();
     const CellStatus& cellStatus = ca.getCellStatus();
     static int iteration = 0;
@@ -601,6 +602,7 @@ int main(int, char**)
             ImGui::Begin("Menu");
             ImGui::Text("Ca Information");            
             ImGui::NewLine();
+            ImGui::Text("Rule: 0x%x", props.ruleNumber);
             ImGui::Text("Cells: %d", cellStatus.cellNum);
             ImGui::Text("Alive cells: %d", cellStatus.aliveCount);
             ImGui::Text("Dead  cells: %d", cellStatus.deadCount);
@@ -622,15 +624,7 @@ int main(int, char**)
         {
         }
 
-        if (ImGui::GetTime() >= deadline && !paused) {
-            iteration = ca.step();
-            if(vec.size() > 60){
-                ca.pseudorandomPattern();
-                vec.clear();
-            }
-            ca.grid(vec);
-            deadline = ImGui::GetTime() + delay;
-        }
+        
 
         {       
             ImDrawList* drawList = ImGui::GetBackgroundDrawList();
@@ -654,6 +648,18 @@ int main(int, char**)
                 }    
             }
         }
+
+
+        if (ImGui::GetTime() >= deadline && !paused) {
+            if(vec.size() > 60){
+                vec.clear();
+            }
+            iteration = ca.step();
+            ca.grid(vec);
+            deadline = ImGui::GetTime() + delay;
+        }
+
+
 
         // Rendering
         ImGui::Render();

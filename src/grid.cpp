@@ -21,10 +21,6 @@ void Grid::pseudorandomPopulateGrid(){
 		tensor.cell(i, 0, 0, static_cast<CellState>(random_number));
 	}
 */
-	for(size_t i = 0; i < tensor.size(); i++){
-		tensor.cell(i, 0, 0, CellState::DEAD);
-	}
-
 	tensor.cell((tensor.size()/2), 0, 0, CellState::ALIVE);
 	int aliveCells = 1;
 	cellStatus.aliveCount = aliveCells;
