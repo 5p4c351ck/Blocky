@@ -2,11 +2,9 @@
 
 Cellular automata research framework written in C++
 
-![Screenshot](https://github.com/5p4c351ck/Blocky/blob/main/docs/CA.PNG)
-
 Easily study and control cellular automata.
 
-![Screenshot](https://github.com/5p4c351ck/Blocky/blob/main/docs/CA.png)
+![Screenshot]([https://github.com/5p4c351ck/Blocky/blob/main/docs/CA.png](https://github.com/5p4c351ck/Blocky/blob/main/docs/Screenshot%20from%202024-11-12%2000-36-44.png))
 
 ## Compile and execute the program
 
