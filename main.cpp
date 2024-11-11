@@ -467,6 +467,8 @@ int main(int, char**)
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
 
+    ImGui::GetIO().FontGlobalScale = 1.0f;
+
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForVulkan(window, true);
     ImGui_ImplVulkan_InitInfo init_info = {};
@@ -503,27 +505,36 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     // Our state
-    bool lock_menu_window = false;
+    bool grid_visible = false;
     ImVec4 bg_color = ImVec4(0.980, 0.643, 2.20f, 0.961);
-    ImVec4 cell_color =  ImVec4(0.529, 1.00f, 0.835, 1.00f);
+    ImVec4 cell_color =  ImVec4(0.529, 1.00f, 0.835, 1.0f);
 
     
-                std::vector<size_t> v{10};
-                caProperties p{v};    
-                p.ruleNumber = 0x1E;
-                
-                CellularAutomata ca{p};
-                ca.pseudorandomPattern();
+    std::vector<size_t> v{10};
+    caProperties p{v};    
+    p.ruleNumber = 0x1E;
 
-            bool paused = false;
-            static float f = 0.0f;
-            static int cells = ca.cellsAll();
-            static int aliveCells = ca.alive();
-            static int deadCells = ca.dead();
-            static int iteration = 0;
-            float delay = 0.2f;
-            float deadline = 0.0f;
+    CellularAutomata ca{p};
+    ca.pseudorandomPattern();
 
+    bool paused = false;
+    static float f = 0.0f;
+    std::vector<std::vector<CellState>> vec;
+    const caProperties& props = ca.properties();
+    const CellStatus& cellStatus = ca.getCellStatus();
+    static int iteration = 0;
+    float delay = 0.2f;
+    float deadline = 0.0f;
+    
+    CellState cell;
+    ImVec2 cellSize(10.0f, 10.0f);
+    ImVec2 currentPosition;
+    float offsetX = 0;
+    float offsetY = 0;
+
+    ImGuiStyle& style = ImGui::GetStyle();
+    style.WindowRounding = 10.0f; // Set the rounding radius (adjust this value for more/less roundness)
+    style.WindowBorderSize = 0.0f; // Optional: set a border size (1.0f for a border, 0.0f for no border)
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -584,15 +595,15 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_TitleBgActive, titleBarActiveColor); // Set active title background color
             ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.15f, 0.15f, 0.15f, 0.9f)); // Background color of the window
         
-
+            
             
             //ImGui::Begin("Menu", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);                        
             ImGui::Begin("Menu");
             ImGui::Text("Ca Information");            
             ImGui::NewLine();
-            ImGui::Text("Cells: %d", cells);
-            ImGui::Text("Alive cells: %d", aliveCells);
-            ImGui::Text("Dead  cells: %d", deadCells);
+            ImGui::Text("Cells: %d", cellStatus.cellNum);
+            ImGui::Text("Alive cells: %d", cellStatus.aliveCount);
+            ImGui::Text("Dead  cells: %d", cellStatus.deadCount);
             if (ImGui::Button("Pause"))                                  // Buttons return true when clicked (most widgets return true when edited/activated)
                 paused = !paused;
             ImGui::SameLine();
@@ -600,52 +611,45 @@ int main(int, char**)
             ImGui::SliderFloat("Simulation delay", &delay, 0.0f, 1.0f);      // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("Background color", (float*)&bg_color); // Edit 3 floats representing a color
             ImGui::ColorEdit3("Cell color", (float*)&cell_color); // Edit 3 floats representing a color
-            ImGui::Checkbox("Lock Menu", &lock_menu_window);
+            ImGui::Checkbox("Grid visible", &grid_visible);
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
 
             ImGui::PopStyleColor(20); // Pop the styles
         }
 
-        // 3. Show another simple window.
-        if (lock_menu_window)
+        if (grid_visible)
         {
         }
 
-        
-
         if (ImGui::GetTime() >= deadline && !paused) {
             iteration = ca.step();
-            aliveCells = ca.alive();
-            deadCells = ca.dead();
             deadline = ImGui::GetTime() + delay;
-
-
-
-            
         }
 
+    {       
+            ImDrawList* drawList = ImGui::GetBackgroundDrawList();
+            ImVec2 windowSize = ImGui::GetIO().DisplaySize;
+            ImVec2 startPos((windowSize.x - cellSize.x) * 0.5f, (windowSize.y - cellSize.y) * 0.5f);            
+            ImU32 color = ImGui::GetColorU32(cell_color);
+            ImVec2 currentPosition = startPos;
+            if(vec.size() > 10){vec.clear();}
+            ca.grid(vec);
 
-          // Draw a white rectangle at the center of the frame
-    
-    {
-        // Get the draw list
-        ImDrawList* drawList = ImGui::GetBackgroundDrawList();
-
-        // Define the rectangle's position and size
-        ImVec2 windowSize = ImGui::GetIO().DisplaySize; // Get the current display size
-        ImVec2 rectSize(10.0f, 10.0f); // Size of the rectangle
-        ImVec2 rectPos((windowSize.x - rectSize.x) * 0.5f, (windowSize.y - rectSize.y) * 0.5f); // Center position
-
-        // Define the color (white)
-        ImU32 color = ImGui::GetColorU32(cell_color);
-
-        // Draw the filled rectangle
-        drawList->AddRectFilled(rectPos, ImVec2(rectPos.x + rectSize.x, rectPos.y + rectSize.y), color);
+            if(props.dm == Dimensionality::ONE_D){
+                for(size_t i = 0; i < vec.size(); i++){
+                    for(size_t j = 0; j < props.gridWidth; j++){
+                        cell = vec[i][j];
+                        if(cell == CellState::ALIVE){
+                            drawList->AddRectFilled(currentPosition, ImVec2(currentPosition.x + cellSize.x, currentPosition.y + cellSize.y), color, 3.00f);
+                        }
+                        currentPosition.x += (cellSize.x + 2.0f);
+                    }
+                    currentPosition.y += (cellSize.y + 2.0f);
+                    currentPosition.x = startPos.x;
+                }    
+            }
     }
-
-
-
 
         // Rendering
         ImGui::Render();

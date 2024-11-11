@@ -5,20 +5,37 @@ int CellularAutomata::step(){
     return caproperties.currentIteration += 1;
 }
 
+
+void CellularAutomata::grid(std::vector<std::vector<CellState>>& vec) const{
+    std::vector<CellState> v;
+    Tensor tensor = gridInstance.getTensor();
+    if(caproperties.dm == Dimensionality::ONE_D){
+        for(size_t i = 0; i < caproperties.gridWidth; i++){
+            v.push_back(tensor.cell(i,0,0));
+        }
+        vec.push_back(v);
+    }
+}
+
 void CellularAutomata::pseudorandomPattern(){
     gridInstance.pseudorandomPopulateGrid();
 }
 
 void CellularAutomata::properties(caProperties prop){
-    return;
+    caproperties = prop;
 }
 
-caProperties CellularAutomata::properties() const{
+const caProperties& CellularAutomata::properties() const{
     return caproperties;
 }
 
-unsigned int CellularAutomata::alive(){return gridInstance.alive();}
-unsigned int CellularAutomata::dead(){return gridInstance.dead();}
-unsigned int CellularAutomata::cellsAll(){return gridInstance.cellsAll();}
+const Tensor& CellularAutomata::gridTensor() const{
+    return gridInstance.getTensor();
+}
+
+const CellStatus& CellularAutomata::getCellStatus() const {
+    return gridInstance.getCellStatus();
+}
+
 
 

@@ -17,8 +17,8 @@ void Grid::pseudorandomPopulateGrid(){
 		if(random_number){aliveCells += 1;}
 		tensor.cell(i, 0, 0, static_cast<CellState>(random_number));
 	}
-	aliveCount = aliveCells;
-	setDeadCellCount(aliveCount);
+	cellStatus.aliveCount = aliveCells;
+	setDeadCellCount(cellStatus.aliveCount);
 	return;
 }
 
@@ -36,14 +36,20 @@ void Grid::updateGrid(unsigned int ruleNumber){
 			}
 		}
 	}
-	aliveCount = aliveCells;
-	setDeadCellCount(aliveCount);
+	cellStatus.aliveCount = aliveCells;
+	setDeadCellCount(cellStatus.aliveCount);
 	tensor.swap();
 }
 
-unsigned int Grid::alive(){return aliveCount;}
-unsigned int Grid::dead(){return deadCount;}
-unsigned int Grid::cellsAll(){return cellNum;}
+const Tensor& Grid::getTensor() const {
+	return tensor;
+}
+
+
+const CellStatus& Grid::getCellStatus() const {
+	return cellStatus;
+}
+
 
 std::vector<CellState> Grid::getNeighborhood (size_t width, size_t height, size_t depth)  const{
 		std::vector<CellState> neighborhood;
@@ -75,6 +81,6 @@ CellState Grid::applyRule(unsigned int ruleNumber, const std::vector<CellState>&
     return static_cast<CellState>(((ruleNumber >> neighbors) & 1));
 }
 
-void Grid::setDeadCellCount(int aliveCells){
-	deadCount = cellNum - aliveCells;
+void Grid::setDeadCellCount(unsigned int aliveCells){
+	cellStatus.deadCount = cellStatus.cellNum - aliveCells;
 }

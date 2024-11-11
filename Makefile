@@ -13,7 +13,7 @@ OBJS = $(SRCS:.cpp=.o)
 all: $(target)
 
 %.o : %.cpp
-	$(cc) -c $< -o $@ $(cflags)
+	$(cc) -c -g $< -o $@ $(cflags)
 
 $(target): $(OBJS) 
 	$(cc) $^ -o $@ $(lflags)
