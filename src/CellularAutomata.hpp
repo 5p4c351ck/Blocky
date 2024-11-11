@@ -40,6 +40,7 @@ class CellularAutomata  {
         /* API */
         int step();
         void grid(std::vector<std::vector<CellState>>& vec) const;
+        void clearGrid();
         void pseudorandomPattern();
         void properties(caProperties prop);
         const caProperties& properties() const;

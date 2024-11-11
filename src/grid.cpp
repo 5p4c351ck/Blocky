@@ -5,20 +5,31 @@ void Grid::clearGrid(){
 }
 
 void Grid::pseudorandomPopulateGrid(){
+
+
+/*
     int lower_bound = 1;
     int upper_bound = 100;
 	std::random_device rd;
 	randomSeed = rd();
 	std::mt19937 gen(randomSeed);
 	std::uniform_int_distribution<> distr(lower_bound, upper_bound);
-	int aliveCells = 0;
+	
     for(size_t i = 0; i < tensor.size(); i++){
 		int random_number = distr(gen) % 2;
 		if(random_number){aliveCells += 1;}
 		tensor.cell(i, 0, 0, static_cast<CellState>(random_number));
 	}
+*/
+	for(size_t i = 0; i < tensor.size(); i++){
+		tensor.cell(i, 0, 0, CellState::DEAD);
+	}
+
+	tensor.cell((tensor.size()/2), 0, 0, CellState::ALIVE);
+	int aliveCells = 1;
 	cellStatus.aliveCount = aliveCells;
 	setDeadCellCount(cellStatus.aliveCount);
+	tensor.swap();
 	return;
 }
 

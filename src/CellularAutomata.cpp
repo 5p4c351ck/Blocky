@@ -17,6 +17,10 @@ void CellularAutomata::grid(std::vector<std::vector<CellState>>& vec) const{
     }
 }
 
+void CellularAutomata::clearGrid(){
+    gridInstance.clearGrid();
+}
+
 void CellularAutomata::pseudorandomPattern(){
     gridInstance.pseudorandomPopulateGrid();
 }

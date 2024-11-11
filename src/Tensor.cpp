@@ -26,7 +26,7 @@ CellState Tensor::cell(size_t width, size_t height, size_t depth) const{
 void Tensor::cell(size_t width, size_t height, size_t depth, CellState state){
     std::vector<size_t> indices{width,height,depth};
     indices.resize(dimensionNumber());
-    dataCurrent[computeIndex(indices)] = state;
+    dataNext[computeIndex(indices)] = state;
 }
 
 void Tensor::initializeStrides() {

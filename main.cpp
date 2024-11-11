@@ -510,7 +510,7 @@ int main(int, char**)
     ImVec4 cell_color =  ImVec4(0.529, 1.00f, 0.835, 1.0f);
 
     
-    std::vector<size_t> v{10};
+    std::vector<size_t> v{60};
     caProperties p{v};    
     p.ruleNumber = 0x1E;
 
@@ -624,17 +624,21 @@ int main(int, char**)
 
         if (ImGui::GetTime() >= deadline && !paused) {
             iteration = ca.step();
+            if(vec.size() > 60){
+                ca.pseudorandomPattern();
+                vec.clear();
+            }
+            ca.grid(vec);
             deadline = ImGui::GetTime() + delay;
         }
 
-    {       
+        {       
             ImDrawList* drawList = ImGui::GetBackgroundDrawList();
             ImVec2 windowSize = ImGui::GetIO().DisplaySize;
-            ImVec2 startPos((windowSize.x - cellSize.x) * 0.5f, (windowSize.y - cellSize.y) * 0.5f);            
+            ImVec2 startPos((windowSize.x - cellSize.x) * 0.15f, (windowSize.y - cellSize.y) * 0.15f);            
             ImU32 color = ImGui::GetColorU32(cell_color);
             ImVec2 currentPosition = startPos;
-            if(vec.size() > 10){vec.clear();}
-            ca.grid(vec);
+            
 
             if(props.dm == Dimensionality::ONE_D){
                 for(size_t i = 0; i < vec.size(); i++){
@@ -649,7 +653,7 @@ int main(int, char**)
                     currentPosition.x = startPos.x;
                 }    
             }
-    }
+        }
 
         // Rendering
         ImGui::Render();
